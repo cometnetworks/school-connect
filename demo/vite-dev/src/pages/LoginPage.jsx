@@ -22,22 +22,27 @@ export default function LoginPage() {
             return;
         }
 
-        if (parents === undefined) {
-            setError('Conectando con la base de datos, intenta de nuevo...');
-            return;
-        }
+        // Demo Master Bypass
+        const isMasterDemo = (email.toLowerCase() === 'mario@padres.com' || email.toLowerCase() === 'carlos.mendoza@email.com');
 
-        // Demo validation
+        // Check in Convex data if loaded
         const parent = parents?.find(p => p.email.toLowerCase() === email.toLowerCase());
 
-        if (parent) {
-            // Allow any password for demo purposes or a specific one
+        if (parent || isMasterDemo) {
+            // Set consistent auth key for PrivateRoute
             localStorage.setItem('schoolConnectAuth', 'true');
-            localStorage.setItem('schoolConnectParentId', parent._id);
-            localStorage.setItem('schoolConnectParentName', parent.name);
+
+            // Store details for personalization
+            if (parent) {
+                localStorage.setItem('schoolConnectParentId', parent._id);
+                localStorage.setItem('schoolConnectParentName', parent.name);
+            } else {
+                localStorage.setItem('schoolConnectParentName', 'Padre de Familia (Demo)');
+            }
+
             navigate('/');
         } else {
-            setError('Credenciales incorrectas. (Pista: usa mario@padres.com)');
+            setError('Credenciales incorrectas. (Pista: usa carlos.mendoza@email.com)');
         }
     };
 
@@ -80,7 +85,7 @@ export default function LoginPage() {
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
                                     className="w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-100 rounded-2xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-[var(--color-brand-blue)] focus:border-transparent transition-all"
-                                    placeholder="mario@padres.com"
+                                    placeholder="carlos.mendoza@email.com"
                                 />
                             </div>
                         </div>

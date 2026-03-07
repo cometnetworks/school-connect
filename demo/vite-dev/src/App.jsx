@@ -4,6 +4,7 @@ import { Home, Users, Settings } from 'lucide-react';
 import HomePage from './pages/HomePage';
 import StudentProfile from './pages/StudentProfile';
 import LoginPage from './pages/LoginPage';
+import ChildrenPage from './pages/ChildrenPage';
 
 // Simple Auth Guard
 const PrivateRoute = ({ children }) => {
@@ -60,7 +61,7 @@ function App() {
             <Layout>
               <Routes>
                 <Route path="/" element={<HomePage />} />
-                <Route path="/children" element={<HomePage />} />
+                <Route path="/children" element={<ChildrenPage />} />
                 <Route path="/student/:id" element={<StudentProfile />} />
                 <Route path="/settings" element={
                   <div className="p-6 text-center mt-20">

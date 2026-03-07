@@ -8,10 +8,11 @@ export default function HomePage() {
     const navigate = useNavigate();
     const [readComms, setReadComms] = useState([]);
 
-    const parents = useQuery(api.queries.getParents);
-    const parentId = parents?.[0]?._id;
+    // Get auth data from session
+    const parentIdStr = localStorage.getItem('schoolConnectParentId');
+    const parentFirstName = localStorage.getItem('schoolConnectParentName')?.split(' ')[0] || 'Padre';
 
-    const dashboard = useQuery(api.queries.getParentDashboard, parentId ? { parentId } : "skip");
+    const dashboard = useQuery(api.queries.getParentDashboard, parentIdStr ? { parentId: parentIdStr } : "skip");
     const communications = useQuery(api.queries.getCommunications);
 
     const markAsReadMutation = useMutation(api.mutations.markCommunicationAsRead);
@@ -23,13 +24,13 @@ export default function HomePage() {
     const { students: myChildren, myGrades, upcomingExams, activeSanctions } = dashboard;
 
     // Aggregate Data
-    const unreadComms = communications.filter(c => parentId && !c.readBy.includes(parentId) && !readComms.includes(c._id));
+    const unreadComms = communications.filter(c => parentIdStr && !c.readBy.includes(parentIdStr) && !readComms.includes(c._id));
     const averageGrade = myGrades.length > 0 ? (myGrades.reduce((acc, curr) => acc + curr.average, 0) / myGrades.length).toFixed(1) : 0;
 
     const markAsRead = (id) => {
         setReadComms([...readComms, id]);
-        if (parentId) {
-            markAsReadMutation({ communicationId: id, parentId });
+        if (parentIdStr) {
+            markAsReadMutation({ communicationId: id, parentId: parentIdStr });
         }
     };
 
@@ -45,7 +46,7 @@ export default function HomePage() {
             <div className="bg-gradient-to-r from-[var(--color-brand-blue)] to-[var(--color-brand-purple)] pt-12 pb-16 rounded-b-[2rem] px-6 text-white shadow-md">
                 <div className="flex justify-between items-center">
                     <div>
-                        <h1 className="text-2xl font-bold tracking-tight">Hola, Carlos</h1>
+                        <h1 className="text-2xl font-bold tracking-tight">Hola, {parentFirstName}</h1>
                         <p className="opacity-80 text-sm mt-1">Panel General</p>
                     </div>
                     <div className="h-10 w-10 bg-white/20 rounded-full flex items-center justify-center relative cursor-pointer active:scale-95 transition-transform" onClick={() => document.getElementById('avisos').scrollIntoView({ behavior: 'smooth' })}>

@@ -4,25 +4,62 @@ import { useQuery, useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { Bell, Info, AlertCircle, ChevronRight, User, CalendarDays, TrendingUp, GraduationCap } from 'lucide-react';
 
+const MOCK_DASHBOARD = {
+    students: [
+        {
+            _id: "demo_1",
+            name: "Sofía Mendoza",
+            grade: "2º",
+            group: "A",
+            shift: "Mañana",
+            photoUrl: "https://i.pravatar.cc/150?u=sofia"
+        },
+        {
+            _id: "demo_2",
+            name: "Leo Mendoza",
+            grade: "5º",
+            group: "B",
+            shift: "Mañana",
+            photoUrl: "https://i.pravatar.cc/150?u=leo"
+        }
+    ],
+    myGrades: [
+        { subject: "Matemáticas", average: 9.5 },
+        { subject: "Español", average: 8.5 }
+    ],
+    upcomingExams: [
+        { _id: "e1", studentId: "demo_1", subject: "Matemáticas", date: new Date().toISOString(), type: "Mensual" }
+    ],
+    activeSanctions: []
+};
+
+const MOCK_COMMUNICATIONS = [
+    {
+        _id: "c1",
+        title: "Bienvenido al Instituto Alina",
+        message: "Estamos felices de contar con este nuevo portal para estar más cerca de ustedes.",
+        date: new Date().toISOString(),
+        readBy: []
+    }
+];
+
 export default function HomePage() {
     const navigate = useNavigate();
     const [readComms, setReadComms] = useState([]);
 
-    // Get auth data from session
     const parentIdStr = localStorage.getItem('schoolConnectParentId');
     const parentFirstName = localStorage.getItem('schoolConnectParentName')?.split(' ')[0] || 'Padre';
 
-    const dashboard = useQuery(api.queries.getParentDashboard, parentIdStr ? { parentId: parentIdStr } : "skip");
-    const communications = useQuery(api.queries.getCommunications);
+    const dashboardQuery = useQuery(api.queries.getParentDashboard, parentIdStr && parentIdStr.includes('_') ? { parentId: parentIdStr } : "skip");
+    const communicationsQuery = useQuery(api.queries.getCommunications);
 
     const markAsReadMutation = useMutation(api.mutations.markCommunicationAsRead);
 
-    if (communications === undefined) {
-        return <div className="p-6 text-center text-gray-500 mt-20">Cargando plataforma...</div>;
-    }
+    // Use results or fallback to mock
+    const dashboard = (dashboardQuery && dashboardQuery.students?.length > 0) ? dashboardQuery : MOCK_DASHBOARD;
+    const communications = (communicationsQuery && communicationsQuery.length > 0) ? communicationsQuery : MOCK_COMMUNICATIONS;
 
-    // Dashboard might be undefined if skipping or loading, provide defaults
-    const { students: myChildren = [], myGrades = [], upcomingExams = [], activeSanctions = [] } = dashboard || {};
+    const { students: myChildren, myGrades, upcomingExams, activeSanctions } = dashboard;
 
     // Aggregate Data
     const unreadComms = communications.filter(c => parentIdStr && !c.readBy.includes(parentIdStr) && !readComms.includes(c._id));

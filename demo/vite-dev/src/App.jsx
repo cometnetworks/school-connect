@@ -23,7 +23,7 @@ function BottomNav() {
   ];
 
   return (
-    <div className="fixed bottom-0 w-full bg-white border-t border-gray-200 px-6 py-3 flex justify-between items-center z-50 rounded-t-xl shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
+    <div className="absolute bottom-0 left-0 right-0 bg-white border-t border-gray-100 px-6 py-4 flex justify-between items-center z-50 rounded-t-3xl shadow-[0_-8px_30px_rgb(0,0,0,0.04)]">
       {navItems.map((item) => {
         const Icon = item.icon;
         const isActive = location.pathname === item.path || (item.path !== '/' && location.pathname.startsWith(item.path));

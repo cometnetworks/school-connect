@@ -4,6 +4,25 @@ import { useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { ChevronRight, AlertCircle, User, ArrowLeft } from 'lucide-react';
 
+const MOCK_STUDENTS = [
+    {
+        _id: "demo_1",
+        name: "Sofía Mendoza",
+        grade: "2º",
+        group: "A",
+        shift: "Mañana",
+        photoUrl: "https://i.pravatar.cc/150?u=sofia"
+    },
+    {
+        _id: "demo_2",
+        name: "Leo Mendoza",
+        grade: "5º",
+        group: "B",
+        shift: "Mañana",
+        photoUrl: "https://i.pravatar.cc/150?u=leo"
+    }
+];
+
 export default function ChildrenPage() {
     const navigate = useNavigate();
 
@@ -11,13 +30,15 @@ export default function ChildrenPage() {
     const parentIdStr = localStorage.getItem('schoolConnectParentId');
 
     // Fetch data using the real parent ID
-    const dashboard = useQuery(api.queries.getParentDashboard, parentIdStr ? { parentId: parentIdStr } : "skip");
+    const studentsQuery = useQuery(api.queries.getStudentsByParent, parentIdStr && parentIdStr.includes('_') ? { parentId: parentIdStr } : "skip");
+    const activeSanctionsQuery = useQuery(api.queries.getActiveSanctionsByParent, parentIdStr && parentIdStr.includes('_') ? { parentId: parentIdStr } : "skip");
 
-    if (dashboard === undefined) {
+    const myChildren = (studentsQuery && studentsQuery.length > 0) ? studentsQuery : MOCK_STUDENTS;
+    const activeSanctions = activeSanctionsQuery || [];
+
+    if (studentsQuery === undefined || activeSanctionsQuery === undefined) {
         return <div className="p-6 text-center text-gray-500 mt-20">Cargando alumnos...</div>;
     }
-
-    const { students: myChildren, activeSanctions } = dashboard;
 
     return (
         <div className="bg-[#F3F4F6] min-h-screen">

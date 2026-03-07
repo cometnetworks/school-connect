@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SchoolConnect Mérida | Comunicación escolar moderna</title>
+  <meta name="description" content="La app más moderna para conectar escuelas con padres y alumnos en tiempo real. Comunicación, calificaciones, asistencia y avisos, todo en una sola plataforma.">
+  <meta name="keywords" content="escuelas Mérida, app escolar, comunicación padres, educación Yucatán, school app, school management, sistema escolar digital">
+  <meta name="author" content="SchoolConnect Mérida">
+  <link rel="icon" type="image/png" href="assets/favicon-schoolconnect.png" />
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="SchoolConnect Mérida | Comunicación escolar moderna">
+  <meta property="og:description" content="Simplifica la comunicación entre escuela, maestros y padres. Todo en una sola app personalizable.">
+  <meta property="og:image" content="https://demo.schoolconnect.mx/assets/og-schoolconnect-preview.png">
+  <meta property="og:url" content="https://demo.schoolconnect.mx/">
+  <meta property="og:locale" content="es_MX">
+  <meta property="og:site_name" content="SchoolConnect Mérida">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="SchoolConnect Mérida | Comunicación escolar moderna">
+  <meta name="twitter:description" content="La app que transforma la comunicación entre padres, alumnos y maestros.">
+  <meta name="twitter:image" content="https://demo.schoolconnect.mx/assets/og-schoolconnect-preview.png">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root { --brand:#2563eb; --brand2:#7c3aed; --text:#1e293b; --muted:#64748b; --bg:#ffffff; }
+    body { margin:0; font-family:'Inter',sans-serif; background:var(--bg); color:var(--text); }
+    header { display:flex; justify-content:space-between; align-items:center; padding:1rem 2rem; border-bottom:1px solid #e2e8f0; }
+    nav a { margin-right:1rem; text-decoration:none; color:var(--text); font-weight:600; }
+    nav a:hover { color:var(--brand); }
+    .btn { display:inline-block; padding:.75rem 1.25rem; border-radius:.5rem; text-decoration:none; font-weight:600; }
+    .btn-primary { background:var(--brand); color:#fff; }
+    .btn-ghost { border:1px solid #e2e8f0; color:var(--brand); background:#fff; }
+    .hero { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); align-items:center; gap:2rem; padding:4rem 2rem; max-width:1100px; margin:auto; }
+    .hero h1 { font-size:2rem; margin-bottom:.5rem; }
+    .hero .lead { font-size:1.1rem; color:var(--muted); margin-bottom:1rem; }
+    .device img { width:100%; border-radius:1rem; box-shadow:0 0 20px rgba(0,0,0,.05); }
+    section { padding:3rem 2rem; max-width:1100px; margin:auto; }
+    footer { padding:2rem; text-align:center; border-top:1px solid #e2e8f0; color:var(--muted); }
+    #lang-toggle { background:none; border:1px solid #e2e8f0; padding:.5rem .8rem; border-radius:.5rem; cursor:pointer; }
+    .tag { background:#ebf5ff; color:var(--brand); padding:.25rem .75rem; border-radius:.5rem; font-weight:600; }
+    .en { display:none; }
+  </style>
+</head>
+<body>
+  <header>
+    <div style="display:flex; align-items:center; gap:.5rem;">
+      <img src="assets/logo-schoolconnect.png" alt="SchoolConnect Mérida" style="width:40px;height:40px;" />
+      <strong>SchoolConnect Mérida</strong>
+    </div>
+    <nav>
+      <a href="#beneficios" class="es">Beneficios</a>
+      <a href="#demo" class="es">Demo</a>
+      <a href="#faq" class="es">FAQ</a>
+      <a class="btn btn-primary es" href="#agenda">Agendar demo</a>
+      <a href="#beneficios" class="en">Benefits</a>
+      <a href="#demo" class="en">Demo</a>
+      <a href="#faq" class="en">FAQ</a>
+      <a class="btn btn-primary en" href="#agenda">Book demo</a>
+      <button id="lang-toggle">🇪🇸 ES</button>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <div>
+      <div class="es">
+        <span class="tag">Para escuelas de Mérida y Yucatán</span>
+        <h1>Conecta tu escuela con los padres en segundos.</h1>
+        <p class="lead">La app que transforma la comunicación escolar: notas, asistencias, sanciones y comunicados en tiempo real.</p>
+        <ul>
+          <li>✅ Confirmación de lectura instantánea.</li>
+          <li>✅ Personalizable con el logo y colores de tu escuela.</li>
+          <li>✅ Panel administrativo fácil de usar.</li>
+          <li>✅ Compatible con Android, iOS y web.</li>
+        </ul>
+        <div style="display:flex; gap:.75rem; margin-top:1.25rem;">
+          <a class="btn btn-primary" href="demo/index.html" target="_blank">🎓 Ver demo interactiva</a>
+          <a class="btn btn-ghost" href="panel" target="_blank">👨‍💼 Ver panel administrativo</a>
+        </div>
+        <p class="muted" style="margin-top:.75rem;">Implementación rápida · Soporte local en Mérida · Adaptado a tu institución</p>
+      </div>
+      <div class="en">
+        <span class="tag">For schools in Yucatán, Mexico</span>
+        <h1>Connect your school with parents — instantly.</h1>
+        <p class="lead">The app that modernizes school communication. Real-time updates for grades, attendance, and announcements.</p>
+        <ul>
+          <li>✅ Instant read confirmations.</li>
+          <li>✅ Fully branded for your school.</li>
+          <li>✅ Easy-to-use admin dashboard.</li>
+          <li>✅ Works on Android, iOS, and web.</li>
+        </ul>
+        <div style="display:flex; gap:.75rem; margin-top:1.25rem;">
+          <a class="btn btn-primary" href="demo/index.html" target="_blank">🎓 Try interactive demo</a>
+          <a class="btn btn-ghost" href="panel" target="_blank">👨‍💼 View admin dashboard</a>
+        </div>
+        <p class="muted" style="margin-top:.75rem;">Fast setup · Local support in Yucatán · 100% customizable</p>
+      </div>
+    </div>
+    <div class="device">
+      <img src="assets/mockup-hero-realista.png" alt="Vista app SchoolConnect Mérida" />
+    </div>
+  </section>
+
+  <section id="beneficios">
+    <h2 class="es">Beneficios principales</h2>
+    <h2 class="en">Key benefits</h2>
+    <ul style="list-style:none; padding:0; margin-top:1rem;">
+      <li class="es">📱 Comunicación directa con padres y tutores.</li>
+      <li class="es">🧾 Control total de notas y asistencia.</li>
+      <li class="es">⚙️ Personalización por escuela (logo, colores, niveles).</li>
+      <li class="es">☁️ Disponible 24/7 desde la nube.</li>
+      <li class="en">📱 Direct communication with parents and guardians.</li>
+      <li class="en">🧾 Full control of grades and attendance.</li>
+      <li class="en">⚙️ School-level customization (logo, colors, levels).</li>
+      <li class="en">☁️ Cloud-based, 24/7 availability.</li>
+    </ul>
+  </section>
+
+  <section id="faq">
+    <h2 class="es">Preguntas frecuentes</h2>
+    <h2 class="en">Frequently asked questions</h2>
+    <p class="es"><strong>¿Necesito servidores?</strong> No, todo funciona en la nube.</p>
+    <p class="es"><strong>¿Se adapta a cualquier colegio?</strong> Sí, se personaliza con logo, colores y niveles.</p>
+    <p class="es"><strong>¿Hay soporte en Mérida?</strong> Sí, soporte local para capacitación e implementación.</p>
+    <p class="en"><strong>Do I need servers?</strong> No, everything runs in the cloud.</p>
+    <p class="en"><strong>Does it fit any school?</strong> Yes, fully branded to your school.</p>
+    <p class="en"><strong>Local support?</strong> Yes, local support in Yucatán for training and rollout.</p>
+  </section>
+
+  <section id="agenda">
+    <h2 class="es">Agenda una demo personalizada</h2>
+    <h2 class="en">Book a personalized demo</h2>
+    <form id="lead-form-es" class="es" action="mailto:info@schoolconnect.mx" method="post" enctype="text/plain" style="max-width:500px;margin:auto;display:grid;gap:1rem;">
+      <input type="text" name="Nombre" placeholder="Nombre y cargo" required />
+      <input type="email" name="Email" placeholder="Correo institucional" required />
+      <input type="text" name="Teléfono" placeholder="Teléfono" />
+      <textarea name="Mensaje" placeholder="Mensaje (opcional)" rows="4"></textarea>
+      <button class="btn btn-primary" type="submit">Solicitar demo</button>
+    </form>
+    <form id="lead-form-en" class="en" action="mailto:info@schoolconnect.mx" method="post" enctype="text/plain" style="max-width:500px;margin:auto;display:grid;gap:1rem;">
+      <input type="text" name="Name" placeholder="Name and position" required />
+      <input type="email" name="Email" placeholder="Institutional email" required />
+      <input type="text" name="Phone" placeholder="Phone" />
+      <textarea name="Message" placeholder="Message (optional)" rows="4"></textarea>
+      <button class="btn btn-primary" type="submit">Book demo</button>
+    </form>
+  </section>
+
+  <footer>© 2025 SchoolConnect Mérida — Desarrollado para escuelas de Yucatán 🇲🇽</footer>
+
+  <script>
+    const langBtn = document.getElementById('lang-toggle');
+    let currentLang = 'es';
+    document.querySelectorAll('.en').forEach(el => el.style.display = 'none');
+    langBtn.addEventListener('click', () => {
+      const showEn = currentLang === 'es';
+      document.querySelectorAll('.es').forEach(el => el.style.display = showEn ? 'none' : '');
+      document.querySelectorAll('.en').forEach(el => el.style.display = showEn ? '' : 'none');
+      langBtn.textContent = showEn ? '🇺🇸 EN' : '🇪🇸 ES';
+      currentLang = showEn ? 'en' : 'es';
+    });
+  </script>
+</body>
+</html>

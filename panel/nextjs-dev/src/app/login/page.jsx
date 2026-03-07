@@ -45,11 +45,11 @@ export default function AdminLoginPage() {
             <div className="relative w-full max-w-md">
                 {/* Logo and Header */}
                 <div className="text-center mb-10">
-                    <div className="bg-white inline-flex p-4 rounded-3xl shadow-lg border border-gray-100 mb-6">
-                        <img src="/logo-schoolconnect.png" alt="SchoolConnect Admin Logo" className="w-24 h-24 object-contain mx-auto" />
+                    <div className="inline-flex p-4 mb-6">
+                        <img src="/logo-schoolconnect.png" alt="Instituto Alina Admin Logo" className="w-28 h-28 object-contain mx-auto" />
                     </div>
-                    <h1 className="text-3xl font-bold text-gray-900 tracking-tight">Portal Administrativo</h1>
-                    <p className="text-gray-500 mt-2 text-sm">Ingresa tus credenciales para administrar SchoolConnect</p>
+                    <h1 className="text-3xl font-bold text-gray-900 tracking-tight">Instituto Alina</h1>
+                    <p className="text-gray-500 mt-2 text-sm">Portal de Administración Escolar</p>
                 </div>
 
                 {/* Login Form */}
@@ -103,6 +103,18 @@ export default function AdminLoginPage() {
                             <LogIn size={18} />
                         </button>
                     </form>
+
+                    <div className="mt-8 pt-6 border-t border-gray-100 text-center">
+                        <button
+                            onClick={() => {
+                                localStorage.setItem("schoolConnectAdminAuth", "true");
+                                router.replace("/");
+                            }}
+                            className="text-sm font-semibold text-blue-600 hover:text-blue-700 bg-blue-50 px-4 py-2 rounded-xl transition-colors"
+                        >
+                            Acceso Rápido (Solo Demo)
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>

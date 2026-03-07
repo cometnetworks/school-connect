@@ -47,7 +47,7 @@ export default function HomePage() {
                 <div className="flex justify-between items-center">
                     <div>
                         <h1 className="text-2xl font-bold tracking-tight">Hola, {parentFirstName}</h1>
-                        <p className="opacity-80 text-sm mt-1">Panel General</p>
+                        <p className="opacity-80 text-sm mt-1">Instituto Alina</p>
                     </div>
                     <div className="h-10 w-10 bg-white/20 rounded-full flex items-center justify-center relative cursor-pointer active:scale-95 transition-transform" onClick={() => document.getElementById('avisos').scrollIntoView({ behavior: 'smooth' })}>
                         <Bell size={20} />

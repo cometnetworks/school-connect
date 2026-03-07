@@ -17,11 +17,12 @@ export default function HomePage() {
 
     const markAsReadMutation = useMutation(api.mutations.markCommunicationAsRead);
 
-    if (dashboard === undefined || communications === undefined) {
-        return <div className="p-6 text-center text-gray-500 mt-20">Cargando información...</div>;
+    if (communications === undefined) {
+        return <div className="p-6 text-center text-gray-500 mt-20">Cargando plataforma...</div>;
     }
 
-    const { students: myChildren, myGrades, upcomingExams, activeSanctions } = dashboard;
+    // Dashboard might be undefined if skipping or loading, provide defaults
+    const { students: myChildren = [], myGrades = [], upcomingExams = [], activeSanctions = [] } = dashboard || {};
 
     // Aggregate Data
     const unreadComms = communications.filter(c => parentIdStr && !c.readBy.includes(parentIdStr) && !readComms.includes(c._id));

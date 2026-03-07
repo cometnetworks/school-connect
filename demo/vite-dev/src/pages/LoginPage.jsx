@@ -22,23 +22,21 @@ export default function LoginPage() {
             return;
         }
 
-        // Demo Master Bypass
-        const isMasterDemo = (email.toLowerCase() === 'mario@padres.com' || email.toLowerCase() === 'carlos.mendoza@email.com');
+        const emailLower = email.toLowerCase();
+        const isMasterDemo = (emailLower === 'mario@padres.com' || emailLower === 'carlos.mendoza@email.com' || emailLower === 'carlos.mendoza@gmail.com');
 
-        // Check in Convex data if loaded
-        const parent = parents?.find(p => p.email.toLowerCase() === email.toLowerCase());
+        // Check in Convex data
+        const parent = parents?.find(p => p.email.toLowerCase() === emailLower);
 
         if (parent || isMasterDemo) {
-            // Set consistent auth key for PrivateRoute
             localStorage.setItem('schoolConnectAuth', 'true');
 
-            // Store details for personalization
-            if (parent) {
-                localStorage.setItem('schoolConnectParentId', parent._id);
-                localStorage.setItem('schoolConnectParentName', parent.name);
-            } else {
-                localStorage.setItem('schoolConnectParentName', 'Padre de Familia (Demo)');
-            }
+            // Critical: Ensure WE ALWAYS HAVE AN ID for the dashboard query
+            const finalId = parent?._id || "parent_demo_id";
+            const finalName = parent?.name || "Carlos Mendoza";
+
+            localStorage.setItem('schoolConnectParentId', finalId);
+            localStorage.setItem('schoolConnectParentName', finalName);
 
             navigate('/');
         } else {

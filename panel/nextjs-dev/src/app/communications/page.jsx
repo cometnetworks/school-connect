@@ -7,26 +7,35 @@ import { useMutation } from 'convex/react';
 import { api } from '../../../convex/_generated/api';
 
 export default function CommunicationsPage() {
+    const createComm = useMutation(api.mutations.createCommunication);
+
     const [title, setTitle] = useState('');
     const [message, setMessage] = useState('');
     const [type, setType] = useState('general');
     const [status, setStatus] = useState(null); // 'sending', 'success', 'error'
 
-    // Real mutation would go here, e.g., const sendCommunication = useMutation(api.mutations.sendCommunication)
-
-    const handleSend = (e) => {
+    const handleSend = async (e) => {
         e.preventDefault();
         if (!title || !message) return;
 
         setStatus('sending');
 
-        // Simulate network delay for Demo
-        setTimeout(() => {
+        try {
+            await createComm({
+                title,
+                message,
+                type: type === 'general' ? 'global' : 'group', // Aligning with schema types
+                targetId: type === 'specific' ? 'demo-group-id' : undefined
+            });
+
             setStatus('success');
             setTitle('');
             setMessage('');
             setTimeout(() => setStatus(null), 3000);
-        }, 1500);
+        } catch (error) {
+            setStatus('error');
+            console.error(error);
+        }
     };
 
     return (
@@ -111,7 +120,7 @@ export default function CommunicationsPage() {
                                 type="submit"
                                 disabled={status === 'sending'}
                                 className={`px-8 py-3.5 rounded-xl font-bold text-white transition-all flex items-center gap-2 shadow-sm ${status === 'sending' ? 'bg-gray-400 cursor-not-allowed' :
-                                        type === 'general' ? 'bg-blue-600 hover:bg-blue-700 shadow-blue-500/25' : 'bg-purple-600 hover:bg-purple-700 shadow-purple-500/25'
+                                    type === 'general' ? 'bg-blue-600 hover:bg-blue-700 shadow-blue-500/25' : 'bg-purple-600 hover:bg-purple-700 shadow-purple-500/25'
                                     }`}
                             >
                                 {status === 'sending' ? (

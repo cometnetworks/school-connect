@@ -1,8 +1,15 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route, useNavigate, useLocation } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { BrowserRouter as Router, Routes, Route, useNavigate, useLocation, Navigate } from 'react-router-dom';
 import { Home, Users, Settings } from 'lucide-react';
 import HomePage from './pages/HomePage';
 import StudentProfile from './pages/StudentProfile';
+import LoginPage from './pages/LoginPage';
+
+// Simple Auth Guard
+const PrivateRoute = ({ children }) => {
+  const isAuth = localStorage.getItem('schoolConnectAuth') === 'true';
+  return isAuth ? children : <Navigate to="/login" />;
+};
 
 function BottomNav() {
   const navigate = useNavigate();
@@ -46,14 +53,34 @@ function Layout({ children }) {
 function App() {
   return (
     <Router>
-      <Layout>
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/children" element={<HomePage />} />
-          <Route path="/student/:id" element={<StudentProfile />} />
-          <Route path="/settings" element={<div className="p-6 text-center text-gray-500 mt-20">Ajustes - Próximamente</div>} />
-        </Routes>
-      </Layout>
+      <Routes>
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="*" element={
+          <PrivateRoute>
+            <Layout>
+              <Routes>
+                <Route path="/" element={<HomePage />} />
+                <Route path="/children" element={<HomePage />} />
+                <Route path="/student/:id" element={<StudentProfile />} />
+                <Route path="/settings" element={
+                  <div className="p-6 text-center mt-20">
+                    <h2 className="text-xl font-bold mb-4">Ajustes</h2>
+                    <button
+                      onClick={() => {
+                        localStorage.removeItem('schoolConnectAuth');
+                        window.location.href = '/login';
+                      }}
+                      className="bg-red-50 text-red-600 px-6 py-2 rounded-xl font-medium"
+                    >
+                      Cerrar Sesión
+                    </button>
+                  </div>
+                } />
+              </Routes>
+            </Layout>
+          </PrivateRoute>
+        } />
+      </Routes>
     </Router>
   );
 }

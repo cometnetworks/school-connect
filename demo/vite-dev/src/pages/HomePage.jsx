@@ -61,8 +61,23 @@ export default function HomePage() {
 
     const { students: myChildren, myGrades, upcomingExams, activeSanctions } = dashboard;
 
-    // Aggregate Data
-    const unreadComms = communications.filter(c => parentIdStr && !c.readBy.includes(parentIdStr) && !readComms.includes(c._id));
+    // Filter communications correctly
+    const myFilteredComms = communications.filter(comm => {
+        if (!parentIdStr) return false;
+        if (comm.type === 'global' || !comm.type) return true;
+        if (comm.type === 'individual' && comm.targetId === parentIdStr) return true;
+
+        // Grade/Group filtering
+        const childGrades = myChildren.map(s => s.grade);
+        const childGroups = myChildren.map(s => `${s.grade} ${s.group}`);
+
+        if (comm.type === 'grade' && childGrades.includes(comm.targetId)) return true;
+        if (comm.type === 'group' && childGroups.includes(comm.targetId)) return true;
+
+        return false;
+    });
+
+    const unreadComms = myFilteredComms.filter(c => parentIdStr && !c.readBy.includes(parentIdStr) && !readComms.includes(c._id));
     const averageGrade = myGrades.length > 0 ? (myGrades.reduce((acc, curr) => acc + curr.average, 0) / myGrades.length).toFixed(1) : 0;
 
     const markAsRead = (id) => {
@@ -83,14 +98,21 @@ export default function HomePage() {
             {/* HEADER SECTION */}
             <div className="bg-gradient-to-r from-[var(--color-brand-blue)] to-[var(--color-brand-purple)] pt-12 pb-16 rounded-b-[2rem] px-6 text-white shadow-md">
                 <div className="flex justify-between items-center">
-                    <div>
-                        <h1 className="text-2xl font-bold tracking-tight">Hola, {parentFirstName}</h1>
-                        <p className="opacity-80 text-sm mt-1">Instituto Alina</p>
+                    <div className="flex items-center gap-4">
+                        <div className="w-12 h-12 bg-white/10 rounded-2xl p-2 backdrop-blur-sm">
+                            <img src="/logo-schoolconnect.png" alt="Logo" className="w-full h-full object-contain" />
+                        </div>
+                        <div>
+                            <h1 className="text-2xl font-bold tracking-tight">Hola, {parentFirstName}</h1>
+                            <p className="opacity-80 text-sm mt-1">Instituto Alina</p>
+                        </div>
                     </div>
                     <div className="h-10 w-10 bg-white/20 rounded-full flex items-center justify-center relative cursor-pointer active:scale-95 transition-transform" onClick={() => document.getElementById('avisos').scrollIntoView({ behavior: 'smooth' })}>
                         <Bell size={20} />
                         {unreadComms.length > 0 && (
-                            <span className="absolute top-0 right-0 w-3 h-3 bg-red-500 rounded-full border-2 border-[var(--color-brand-purple)]"></span>
+                            <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 border-2 border-[var(--color-brand-blue)] rounded-full text-[10px] font-bold flex items-center justify-center animate-bounce">
+                                {unreadComms.length}
+                            </span>
                         )}
                     </div>
                 </div>
@@ -175,37 +197,44 @@ export default function HomePage() {
                 </section>
 
                 {/* COMUNICADOS SECTION */}
-                <section id="avisos" className="animate-[slideUp_0.6s_ease-out]">
+                <section id="avisos" className="animate-[slideUp_0.5s_ease-out]">
                     <h2 className="text-lg font-bold text-gray-800 mb-3 ml-1 flex items-center gap-2">
-                        Bandeja de Avisos {unreadComms.length > 0 && <span className="bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">{unreadComms.length}</span>}
+                        <Bell size={18} className="text-[var(--color-brand-blue)]" /> Bandeja de Avisos
                     </h2>
-                    {unreadComms.length === 0 ? (
-                        <div className="text-center p-6 bg-white rounded-2xl border border-gray-100 shadow-sm text-gray-400 text-sm">
-                            Estás al día. No tienes avisos pendientes.
-                        </div>
-                    ) : (
-                        <div className="space-y-3">
-                            {unreadComms.map(comm => (
-                                <div key={comm._id} className="bg-white rounded-2xl p-4 shadow-sm border border-l-4 border-l-[var(--color-brand-blue)] border-y-gray-100 border-r-gray-100 animate-[fadeIn_0.4s_ease-out]">
-                                    <div className="flex gap-3 items-start">
-                                        <div className="mt-0.5 text-[var(--color-brand-blue)] flex-shrink-0 bg-blue-50 p-1.5 rounded-lg">
-                                            <Info size={16} />
-                                        </div>
-                                        <div className="flex-1 min-w-0">
-                                            <h4 className="font-semibold text-gray-800 text-sm truncate">{comm.title}</h4>
-                                            <p className="text-gray-600 text-xs mt-1.5 leading-relaxed break-words">{comm.message}</p>
-                                            <button
-                                                onClick={(e) => { e.stopPropagation(); markAsRead(comm._id); }}
-                                                className="mt-3 text-[11px] font-bold text-[var(--color-brand-purple)] bg-purple-50 px-3 py-1.5 rounded-lg active:bg-purple-100 transition-colors w-max block"
-                                            >
-                                                ✓ Marcar de enterado
-                                            </button>
-                                        </div>
-                                    </div>
+                    <div className="space-y-4">
+                        {myFilteredComms.length === 0 ? (
+                            <div className="bg-white rounded-3xl p-8 text-center shadow-sm border border-gray-100 flex flex-col items-center">
+                                <div className="h-12 w-12 bg-gray-50 rounded-full flex items-center justify-center text-gray-300 mb-3">
+                                    <Bell size={24} />
                                 </div>
-                            ))}
-                        </div>
-                    )}
+                                <p className="text-gray-400 text-sm font-medium">Estás al día. No tienes avisos pendientes.</p>
+                            </div>
+                        ) : (
+                            myFilteredComms.map((comm) => (
+                                <div key={comm._id} className="bg-white rounded-3xl p-5 shadow-sm border border-gray-100 flex gap-4 relative animate-fade-in group">
+                                    <div className="mt-1 text-[var(--color-brand-blue)] flex-shrink-0 bg-blue-50 p-2 rounded-2xl h-10 w-10 flex items-center justify-center">
+                                        <Info size={20} />
+                                    </div>
+                                    <div className="flex-1 min-w-0">
+                                        <div className="flex justify-between items-start mb-1">
+                                            <h4 className="font-bold text-gray-900 text-sm">{comm.title}</h4>
+                                            <span className="text-[10px] font-medium text-gray-400 whitespace-nowrap">{formatDate(comm.date)}</span>
+                                        </div>
+                                        <p className="text-gray-600 text-xs leading-relaxed line-clamp-3 group-hover:line-clamp-none transition-all">{comm.message}</p>
+                                        <button
+                                            onClick={(e) => { e.stopPropagation(); markAsRead(comm._id); }}
+                                            className="mt-3 text-[11px] font-bold text-[var(--color-brand-purple)] bg-purple-50 px-3 py-1.5 rounded-lg active:bg-purple-100 transition-colors w-max block"
+                                        >
+                                            ✓ Marcar de enterado
+                                        </button>
+                                    </div>
+                                    {!comm.readBy.includes(parentIdStr) && !readComms.includes(comm._id) && (
+                                        <span className="absolute top-4 right-4 w-2 h-2 bg-blue-500 rounded-full"></span>
+                                    )}
+                                </div>
+                            ))
+                        )}
+                    </div>
                 </section>
             </div>
         </div>

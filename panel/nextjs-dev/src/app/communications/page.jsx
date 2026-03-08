@@ -1,22 +1,24 @@
-"use client";
-
-import React, { useState } from 'react';
-import DashboardLayout from '../../components/DashboardLayout';
-import { Send, Users, AlertCircle, CheckCircle2 } from 'lucide-react';
-import { useMutation } from 'convex/react';
+import { useMutation, useQuery } from 'convex/react';
 import { api } from '../../../convex/_generated/api';
 
 export default function CommunicationsPage() {
     const createComm = useMutation(api.mutations.createCommunication);
+    const parents = useQuery(api.queries.getParents);
+    const students = useQuery(api.queries.getStudents);
 
     const [title, setTitle] = useState('');
     const [message, setMessage] = useState('');
-    const [type, setType] = useState('general');
-    const [status, setStatus] = useState(null); // 'sending', 'success', 'error'
+    const [type, setType] = useState('global'); // 'global', 'grade', 'group', 'individual'
+    const [targetId, setTargetId] = useState('');
+    const [status, setStatus] = useState(null);
 
     const handleSend = async (e) => {
         e.preventDefault();
         if (!title || !message) return;
+        if (type !== 'global' && !targetId) {
+            alert("Por favor selecciona un destino");
+            return;
+        }
 
         setStatus('sending');
 
@@ -24,13 +26,14 @@ export default function CommunicationsPage() {
             await createComm({
                 title,
                 message,
-                type: type === 'general' ? 'global' : 'group', // Aligning with schema types
-                targetId: type === 'specific' ? 'demo-group-id' : undefined
+                type,
+                targetId: type === 'global' ? undefined : targetId
             });
 
             setStatus('success');
             setTitle('');
             setMessage('');
+            setTargetId('');
             setTimeout(() => setStatus(null), 3000);
         } catch (error) {
             setStatus('error');
@@ -38,102 +41,99 @@ export default function CommunicationsPage() {
         }
     };
 
+    // Helper to get unique grades/groups
+    const uniqueGrades = Array.from(new Set(students?.map(s => s.grade) || []));
+    const uniqueGroups = Array.from(new Set(students?.map(s => `${s.grade} ${s.group}`) || []));
+
     return (
         <DashboardLayout title="Difusión de Comunicados">
-            <div className="max-w-4xl mx-auto space-y-8">
-
+            <div className="max-w-4xl mx-auto space-y-8 pb-20">
                 <div className="flex justify-between items-center">
                     <div>
-                        <h2 className="text-xl font-bold text-gray-900">Nuevo Aviso</h2>
-                        <p className="text-gray-500 text-sm mt-1">Envía notificaciones push y mensajes al tablero de los padres.</p>
+                        <h2 className="text-xl font-bold text-gray-900">Nuevo Aviso al Instituto Alina</h2>
+                        <p className="text-gray-500 text-sm mt-1">Segmenta tu comunicación según el alcance necesario.</p>
                     </div>
                 </div>
 
                 <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
-                    <div className="flex flex-col md:flex-row border-b border-gray-100">
+                    <div className="grid grid-cols-2 md:grid-cols-4 border-b border-gray-100 italic">
                         <button
-                            className={`flex-1 p-4 font-semibold text-sm flex items-center justify-center gap-2 transition-colors ${type === 'general' ? 'bg-blue-50 text-blue-600 border-b-2 border-blue-600' : 'text-gray-500 hover:bg-gray-50'}`}
-                            onClick={() => setType('general')}
-                        >
-                            <Users size={18} />
-                            Aviso General Escolar
-                        </button>
+                            className={`p-4 text-xs font-bold border-r border-gray-50 transition-all ${type === 'global' ? 'bg-blue-600 text-white' : 'bg-gray-50 text-gray-400 hover:bg-gray-100'}`}
+                            onClick={() => { setType('global'); setTargetId(''); }}
+                        >Global</button>
                         <button
-                            className={`flex-1 p-4 font-semibold text-sm flex items-center justify-center gap-2 transition-colors ${type === 'specific' ? 'bg-purple-50 text-purple-600 border-b-2 border-purple-600' : 'text-gray-500 hover:bg-gray-50'}`}
-                            onClick={() => setType('specific')}
-                        >
-                            <AlertCircle size={18} />
-                            Aviso Específico (Por grupo/alumno)
-                        </button>
+                            className={`p-4 text-xs font-bold border-r border-gray-50 transition-all ${type === 'grade' ? 'bg-blue-600 text-white' : 'bg-gray-50 text-gray-400 hover:bg-gray-100'}`}
+                            onClick={() => { setType('grade'); setTargetId(''); }}
+                        >Por Grado</button>
+                        <button
+                            className={`p-4 text-xs font-bold border-r border-gray-50 transition-all ${type === 'group' ? 'bg-blue-600 text-white' : 'bg-gray-50 text-gray-400 hover:bg-gray-100'}`}
+                            onClick={() => { setType('group'); setTargetId(''); }}
+                        >Por Grupo</button>
+                        <button
+                            className={`p-4 text-xs font-bold transition-all ${type === 'individual' ? 'bg-blue-600 text-white' : 'bg-gray-50 text-gray-400 hover:bg-gray-100'}`}
+                            onClick={() => { setType('individual'); setTargetId(''); }}
+                        >Por Padre</button>
                     </div>
 
                     <form onSubmit={handleSend} className="p-8 space-y-6">
                         {status === 'success' && (
                             <div className="bg-green-50 text-green-700 p-4 rounded-xl flex items-center gap-3 animate-fade-in-up">
                                 <CheckCircle2 size={20} className="text-green-600 flex-shrink-0" />
-                                <span className="font-medium text-sm">El comunicado se ha enviado exitosamente a todos los dispositivos móviles.</span>
+                                <span className="font-medium text-sm">Mensaje enviado correctamente.</span>
                             </div>
                         )}
 
-                        {type === 'specific' && (
+                        {type !== 'global' && (
                             <div className="animate-fade-in-up">
-                                <label className="block text-sm font-bold text-gray-700 mb-2">Seleccionar Destino</label>
-                                <select className="w-full border border-gray-200 px-4 py-3 rounded-xl bg-gray-50/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all text-sm font-medium text-gray-700">
-                                    <option value="">Selecciona un grado, grupo o alumno...</option>
-                                    <optgroup label="Primaria">
-                                        <option value="1A">1ro A</option>
-                                        <option value="1B">1ro B</option>
-                                    </optgroup>
+                                <label className="block text-sm font-bold text-gray-700 mb-2">
+                                    {type === 'grade' ? 'Seleccionar Grado' : type === 'group' ? 'Seleccionar Grupo' : 'Seleccionar Padre'}
+                                </label>
+                                <select
+                                    value={targetId}
+                                    onChange={(e) => setTargetId(e.target.value)}
+                                    className="w-full border border-gray-200 px-4 py-3 rounded-xl bg-gray-50/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-sm font-medium"
+                                    required
+                                >
+                                    <option value="">Selecciona una opción...</option>
+                                    {type === 'grade' && uniqueGrades.map(g => <option key={g} value={g}>{g} Grado</option>)}
+                                    {type === 'group' && uniqueGroups.map(g => <option key={g} value={g}>{g}</option>)}
+                                    {type === 'individual' && parents?.map(p => <option key={p._id} value={p._id}>{p.name} ({p.email})</option>)}
                                 </select>
                             </div>
                         )}
 
                         <div>
-                            <label className="block text-sm font-bold text-gray-700 mb-2">Asunto del Comunicado</label>
+                            <label className="block text-sm font-bold text-gray-700 mb-2">Asunto</label>
                             <input
                                 type="text"
                                 value={title}
                                 onChange={(e) => setTitle(e.target.value)}
-                                placeholder="Ej. Suspensión de labores por consejo técnico"
-                                className={`w-full border border-gray-200 px-4 py-3 rounded-xl bg-gray-50/50 focus:bg-white focus:outline-none focus:ring-2 transition-all font-medium ${type === 'general' ? 'focus:ring-blue-500/20 focus:border-blue-500' : 'focus:ring-purple-500/20 focus:border-purple-500'} text-gray-900`}
+                                placeholder="Título del aviso..."
+                                className="w-full border border-gray-200 px-4 py-3 rounded-xl bg-gray-50/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
                                 required
                             />
                         </div>
 
                         <div>
-                            <label className="block text-sm font-bold text-gray-700 mb-2">Mensaje Detallado</label>
+                            <label className="block text-sm font-bold text-gray-700 mb-2">Mensaje</label>
                             <textarea
-                                rows={6}
+                                rows={5}
                                 value={message}
                                 onChange={(e) => setMessage(e.target.value)}
-                                placeholder="Escribe el cuerpo completo del mensaje aquí..."
-                                className={`w-full border border-gray-200 px-4 py-3 rounded-xl bg-gray-50/50 focus:bg-white focus:outline-none focus:ring-2 transition-all resize-none ${type === 'general' ? 'focus:ring-blue-500/20 focus:border-blue-500' : 'focus:ring-purple-500/20 focus:border-purple-500'} text-gray-900`}
+                                placeholder="Escribe el mensaje aquí..."
+                                className="w-full border border-gray-200 px-4 py-3 rounded-xl bg-gray-50/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 resize-none"
                                 required
                             ></textarea>
-                            <p className="text-xs text-gray-400 mt-2 flex justify-end">
-                                {message.length} caracteres
-                            </p>
                         </div>
 
-                        <div className="pt-4 border-t border-gray-100 flex justify-end">
+                        <div className="pt-4 flex justify-end">
                             <button
                                 type="submit"
                                 disabled={status === 'sending'}
-                                className={`px-8 py-3.5 rounded-xl font-bold text-white transition-all flex items-center gap-2 shadow-sm ${status === 'sending' ? 'bg-gray-400 cursor-not-allowed' :
-                                    type === 'general' ? 'bg-blue-600 hover:bg-blue-700 shadow-blue-500/25' : 'bg-purple-600 hover:bg-purple-700 shadow-purple-500/25'
-                                    }`}
+                                className="px-10 py-3.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold flex items-center gap-2 transform active:scale-95 transition-all shadow-lg shadow-blue-500/25 disabled:bg-gray-400"
                             >
-                                {status === 'sending' ? (
-                                    <>
-                                        <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                                        <span>Procesando envío...</span>
-                                    </>
-                                ) : (
-                                    <>
-                                        <span>Publicar Comunicado</span>
-                                        <Send size={18} />
-                                    </>
-                                )}
+                                <span>Enviar Aviso</span>
+                                <Send size={18} />
                             </button>
                         </div>
                     </form>

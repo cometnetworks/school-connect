@@ -36,18 +36,19 @@ export default function ChildrenPage() {
     const myChildren = (studentsQuery && studentsQuery.length > 0) ? studentsQuery : MOCK_STUDENTS;
     const activeSanctions = activeSanctionsQuery || [];
 
-    if (studentsQuery === undefined || activeSanctionsQuery === undefined) {
-        return <div className="p-6 text-center text-gray-500 mt-20">Cargando alumnos...</div>;
-    }
-
     return (
-        <div className="bg-[#F3F4F6] min-h-screen">
+        <div className="bg-[#F3F4F6] min-h-screen pb-24">
             {/* Header */}
-            <div className="bg-white px-6 py-6 border-b border-gray-100 flex items-center gap-4">
-                <button onClick={() => navigate(-1)} className="p-2 hover:bg-gray-50 rounded-full transition-colors">
-                    <ArrowLeft size={20} className="text-gray-600" />
-                </button>
-                <h1 className="text-xl font-bold text-gray-900">Mis Hijos</h1>
+            <div className="bg-white px-6 py-6 border-b border-gray-100 flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                    <button onClick={() => navigate(-1)} className="p-2 hover:bg-gray-50 rounded-full transition-colors">
+                        <ArrowLeft size={20} className="text-gray-600" />
+                    </button>
+                    <h1 className="text-xl font-bold text-gray-900">Instituto Alina</h1>
+                </div>
+                <div className="w-10 h-10">
+                    <img src="/logo-schoolconnect.png" alt="Logo" className="w-full h-full object-contain opacity-80" />
+                </div>
             </div>
 
             <div className="p-6 space-y-4">

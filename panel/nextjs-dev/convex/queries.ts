@@ -120,3 +120,9 @@ export const getStudentProfile = query({
     }
 });
 
+// 11. Get all students (for admin selectors)
+export const getStudents = query({
+    handler: async (ctx) => {
+        return await ctx.db.query("students").collect();
+    },
+});

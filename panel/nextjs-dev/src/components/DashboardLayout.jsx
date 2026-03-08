@@ -20,9 +20,13 @@ export default function DashboardLayout({ children, title = "Vista General" }) {
             {/* Sidebar */}
             <aside className="w-64 bg-white border-r border-gray-200 flex flex-col hidden md:flex">
                 <div className="h-16 flex items-center px-6 border-b border-gray-200">
-                    <div className="flex items-center gap-2 text-blue-600 font-bold text-lg">
-                        <GraduationCap size={24} />
-                        SchoolConnect
+                    <div className="flex items-center gap-3">
+                        <div className="w-8 h-8">
+                            <img src="/logo-schoolconnect.png" alt="Logo" className="w-full h-full object-contain" />
+                        </div>
+                        <div className="font-bold text-blue-600 text-base leading-tight">
+                            Instituto<br /><span className="text-sm font-semibold opacity-70">Alina</span>
+                        </div>
                     </div>
                 </div>
                 <nav className="flex-1 p-4 flex flex-col gap-1">

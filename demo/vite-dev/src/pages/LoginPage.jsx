@@ -53,12 +53,12 @@ export default function LoginPage() {
 
             <div className="relative w-full max-w-sm">
                 {/* Logo and Header */}
-                <div className="text-center mb-8 animate-fade-in-up">
-                    <div className="inline-flex p-4 mb-6">
-                        <img src="/logo-schoolconnect.png" alt="Instituto Alina Logo" className="w-28 h-28 object-contain mx-auto" />
+                <div className="text-center mb-10 animate-fade-in">
+                    <div className="inline-block p-4 bg-white/50 backdrop-blur-md rounded-[2.5rem] shadow-xl mb-6">
+                        <img src="/logo-schoolconnect.png" alt="Instituto Alina Logo" className="w-24 h-24 object-contain" />
                     </div>
-                    <h1 className="text-3xl font-bold text-gray-900 tracking-tight">Instituto Alina</h1>
-                    <p className="text-gray-500 mt-2 text-sm">Portal para Padres de Familia</p>
+                    <h1 className="text-4xl font-black text-gray-900 tracking-tight mb-2">Instituto Alina</h1>
+                    <p className="text-gray-500 font-medium">Portal para Padres de Familia</p>
                 </div>
 
                 {/* Login Form */}
